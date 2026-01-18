@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Card hover effects */
+.hover-effect {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Responsive typography */
+@media (max-width: 600px) {
+    .responsive-text {
+        font-size: 0.875rem !important;
+    }
+}
+
+/* Custom button styles */
+.custom-button {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+/* Paper elevation */
+.paper-elevation {
+    border-radius: 12px !important;
+    border: 1px solid #e0e0e0;
+}

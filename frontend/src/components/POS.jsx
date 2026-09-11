@@ -4,10 +4,10 @@ import { useAuth } from '../AuthContext';
 import axios from 'axios';
 import {
   Container, Grid, Typography, Button, Box, IconButton,
-  AppBar, Toolbar, Badge, List, ListItem, ListItemText, Divider,
+  AppBar, Toolbar, List, ListItem, ListItemText, Divider,
   CircularProgress, Snackbar, Card, CardContent, Avatar, Alert, Paper
 } from '@mui/material';
-import { Add, Remove, ShoppingCart, Logout, Assessment } from '@mui/icons-material';
+import { Add, Remove, Logout } from '@mui/icons-material';
 
 // Import local images in the desired sequence
 import cappuccino from '../assets/cappuccino.jpg';
@@ -47,7 +47,7 @@ const POS = () => {
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -162,13 +162,19 @@ const POS = () => {
                 <Grid item xs={12} sm={6} md={4} key={product.id}>
                   <Card>
                     <CardContent>
-                      <Box display="flex" flexDirection="column" alignItems="center">
-                        <Avatar src={product.image} alt={product.name} sx={{ width: 80, height: 80, mb: 1 }} />
-                        <Typography variant="h6">{product.name}</Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Avatar src={product.image} variant="square" sx={{ width: 80, height: 80, mb: 1 }} />
+                        <Typography variant="subtitle1">{product.name}</Typography>
                         <Typography variant="body2">${product.price.toFixed(2)}</Typography>
-                        <Button variant="contained" size="small" sx={{ mt: 1 }} onClick={() => addToCart(product)}>
-                          Add to Cart
-                        </Button>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                          <IconButton size="small" onClick={() => addToCart(product)}>
+                            <Add />
+                          </IconButton>
+                          <Typography variant="body2" sx={{ mx: 1 }}>{product.stock_quantity}</Typography>
+                          <IconButton size="small" onClick={() => removeFromCart(product.id)} disabled={product.stock_quantity === 0}>
+                            <Remove />
+                          </IconButton>
+                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
@@ -177,44 +183,7 @@ const POS = () => {
             </Grid>
           </Paper>
         </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant="h5" gutterBottom>
-              Cart
-            </Typography>
-            {cart.length === 0 ? (
-              <Typography variant="body1">Cart is empty.</Typography>
-            ) : (
-              <List>
-                {cart.map(item => (
-                  <ListItem key={item.product_id} secondaryAction={
-                    <Box display="flex" alignItems="center">
-                      <IconButton edge="end" onClick={() => removeFromCart(item.product_id)}>
-                        <Remove />
-                      </IconButton>
-                      <Typography sx={{ mx: 1 }}>{item.quantity}</Typography>
-                      <IconButton edge="end" onClick={() => addToCart({ id: item.product_id, name: item.name, price: item.price, image: item.image })}>
-                        <Add />
-                      </IconButton>
-                    </Box>
-                  }>
-                  >
-                    <ListItemText primary={item.name} secondary={`$${item.price.toFixed(2)} x ${item.quantity}`} />
-                  </ListItem>
-                ))}
-                <Divider />
-                <ListItem>
-                  <ListItemText primary="Total" />
-                  <Typography variant="subtitle1">${getCartTotal().toFixed(2)}</Typography>
-                </ListItem>
-                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} onClick={handleCheckout}>
-                  Checkout
-                </Button>
-              </List>
-            )}
-          </Paper>
-        </Grid>
+        {/* Cart and other UI components would follow here */}
       </Grid>
 
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>

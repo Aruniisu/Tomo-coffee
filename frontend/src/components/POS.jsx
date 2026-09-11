@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import axios from 'axios';
 import {
-  Container, Grid, Typography, Box, IconButton,
+  Container, Grid, Typography, IconButton,
   AppBar, Toolbar,
-  CircularProgress, Snackbar, Card, CardContent, Avatar, Alert, Paper
+  CircularProgress, Snackbar, Alert, Paper
 } from '@mui/material';
-import { Add, Remove, Logout } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
 
 // Import local images in the desired sequence
 import cappuccino from '../assets/cappuccino.jpg';
@@ -76,39 +76,6 @@ const POS = () => {
       setLoading(false);
     }
   };
-
-  const addToCart = (product) => {
-    setCart(prev => {
-      const found = prev.find(i => i.product_id === product.id);
-      if (found) {
-        return prev.map(i =>
-          i.product_id === product.id
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        );
-      }
-      return [...prev, {
-        product_id: product.id,
-        name: product.name,
-        price: Number(product.price),
-        image: product.image,
-        quantity: 1
-      }];
-    });
-  };
-
-  const removeFromCart = (id) => {
-    setCart(prev =>
-      prev
-        .map(i => i.product_id === id ? { ...i, quantity: i.quantity - 1 } : i)
-        .filter(i => i.quantity > 0)
-    );
-  };
-
-  const getCartTotal = () =>
-    cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-
-  // Removed unused handleCheckout function to satisfy ESLint
 
   const handleLogout = () => {
     logout();

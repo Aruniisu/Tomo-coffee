@@ -10,18 +10,18 @@ import {
 import { Add, Remove, ShoppingCart, Logout, Assessment } from '@mui/icons-material';
 
 // Import local images in the desired sequence
-import cappuccino from '../assets/products/cappuccino.jpg';
-import croissant from '../assets/products/croissant.jpg';
-import espresso from '../assets/products/espresso.jpg';
-import coffee from '../assets/products/coffee.jpg';
-import latte from '../assets/products/latte.jpg';
-import muffin from '../assets/products/muffin.jpg';
-import sandwich from '../assets/products/sandwich.jpg';
-import tea from '../assets/products/tea.jpg';
-import cake from '../assets/products/cake.jpg';
-import juice from '../assets/products/juice.jpg';
-import bagel from '../assets/products/bagel.jpg';
-import cookie from '../assets/products/cookie.jpg';
+import cappuccino from '../assets/cappuccino.jpg';
+import croissant from '../assets/croissant.jpg';
+import espresso from '../assets/espresso.jpg';
+import coffee from '../assets/coffee.jpg';
+import latte from '../assets/latte.jpg';
+import muffin from '../assets/muffin.jpg';
+import sandwich from '../assets/sandwich.jpg';
+import tea from '../assets/tea.jpg';
+import cake from '../assets/cake.jpg';
+import juice from '../assets/juice.jpg';
+import bagel from '../assets/bagel.jpg';
+import cookie from '../assets/cookie.jpg';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -117,126 +117,112 @@ const POS = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      setCart([]);
       setSnackbar({ open: true, message: 'Order placed successfully!', severity: 'success' });
+      setCart([]);
     } catch (e) {
-      setSnackbar({ open: true, message: 'Checkout failed', severity: 'error' });
+      console.error(e);
+      setSnackbar({ open: true, message: 'Failed to place order.', severity: 'error' });
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  if (loading) {
+    return (
+      <Container sx={{ textAlign: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f0f0f0' }}>
-      {/* Header */}
-      <AppBar sx={{ bgcolor: '#6B4F4F' }}>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <AppBar position="static">
         <Toolbar>
-          <Typography sx={{ flexGrow: 1, fontWeight: 'bold' }}>☕ Tomo's Coffee POS</Typography>
-          <Typography sx={{ mr: 2 }}>Hi, {user?.username}</Typography>
-          <IconButton color="inherit" onClick={() => navigate('/reports')}>
-            <Assessment />
-          </IconButton>
-          <IconButton color="inherit" onClick={() => { logout(); navigate('/login'); }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            POS System
+          </Typography>
+          <IconButton color="inherit" onClick={handleLogout}>
             <Logout />
-          </IconButton>
-          <IconButton color="inherit">
-            <Badge badgeContent={cart.length} color="error">
-              <ShoppingCart />
-            </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      {/* Main Container */}
-      <Container sx={{ mt: 8, display: 'flex', gap: 3 }}>
-        {/* Big White Product Box */}
-        <Paper sx={{ flex: 3, p: 4, borderRadius: 3, boxShadow: 5, bgcolor: 'white' }}>
-          {loading ? (
-            <Box sx={{ textAlign: 'center', mt: 10 }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Grid container spacing={3}>
-              {products.map((p, index) => (
-                <Grid item xs={12} sm={4} key={index}>
-                  <Card sx={{
-                    width: '100%',
-                    height: 320,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    transition: '0.3s',
-                    '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
-                    cursor: 'pointer',
-                  }}>
-                    <Box sx={{ height: 160, overflow: 'hidden' }}>
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    </Box>
-                    <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <Typography variant="subtitle1" fontWeight="bold">{p.name}</Typography>
-                      <Typography color="text.secondary">${p.price.toFixed(2)}</Typography>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 1, bgcolor: '#6B4F4F' }}
-                        onClick={() => addToCart(p)}
-                      >
-                        Add to Cart
-                      </Button>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid item xs={12} md={8}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h5" gutterBottom>
+              Products
+            </Typography>
+            <Grid container spacing={2}>
+              {products.map(product => (
+                <Grid item xs={12} sm={6} md={4} key={product.id}>
+                  <Card>
+                    <CardContent>
+                      <Box display="flex" flexDirection="column" alignItems="center">
+                        <Avatar src={product.image} alt={product.name} sx={{ width: 80, height: 80, mb: 1 }} />
+                        <Typography variant="h6">{product.name}</Typography>
+                        <Typography variant="body2">${product.price.toFixed(2)}</Typography>
+                        <Button variant="contained" size="small" sx={{ mt: 1 }} onClick={() => addToCart(product)}>
+                          Add to Cart
+                        </Button>
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid>
               ))}
             </Grid>
-          )}
-        </Paper>
+          </Paper>
+        </Grid>
 
-        {/* Cart Box */}
-        <Paper sx={{ width: 320, p: 3, borderRadius: 3, boxShadow: 5, bgcolor: '#f9f9f9', height: 'fit-content', mt: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>Your Cart</Typography>
-          <Divider />
-          <List sx={{ maxHeight: 600, overflowY: 'auto' }}>
-            {cart.map(i => (
-              <ListItem key={i.product_id}>
-                <Avatar src={i.image} sx={{ mr: 1 }} />
-                <ListItemText
-                  primary={i.name}
-                  secondary={`$${i.price.toFixed(2)} × ${i.quantity}`}
-                />
-                <IconButton onClick={() => removeFromCart(i.product_id)}>
-                  <Remove />
-                </IconButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider sx={{ my: 2 }} />
-          <Typography fontWeight="bold" sx={{ mb: 1 }}>Total: ${getCartTotal().toFixed(2)}</Typography>
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ bgcolor: '#6B4F4F' }}
-            onClick={handleCheckout}
-            disabled={cart.length === 0}
-          >
-            Checkout
-          </Button>
-        </Paper>
-      </Container>
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h5" gutterBottom>
+              Cart
+            </Typography>
+            {cart.length === 0 ? (
+              <Typography variant="body1">Cart is empty.</Typography>
+            ) : (
+              <List>
+                {cart.map(item => (
+                  <ListItem key={item.product_id} secondaryAction={
+                    <Box display="flex" alignItems="center">
+                      <IconButton edge="end" onClick={() => removeFromCart(item.product_id)}>
+                        <Remove />
+                      </IconButton>
+                      <Typography sx={{ mx: 1 }}>{item.quantity}</Typography>
+                      <IconButton edge="end" onClick={() => addToCart({ id: item.product_id, name: item.name, price: item.price, image: item.image })}>
+                        <Add />
+                      </IconButton>
+                    </Box>
+                  }>
+                  >
+                    <ListItemText primary={item.name} secondary={`$${item.price.toFixed(2)} x ${item.quantity}`} />
+                  </ListItem>
+                ))}
+                <Divider />
+                <ListItem>
+                  <ListItemText primary="Total" />
+                  <Typography variant="subtitle1">${getCartTotal().toFixed(2)}</Typography>
+                </ListItem>
+                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} onClick={handleCheckout}>
+                  Checkout
+                </Button>
+              </List>
+            )}
+          </Paper>
+        </Grid>
+      </Grid>
 
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 };
 

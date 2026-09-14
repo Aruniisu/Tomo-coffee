@@ -1,20 +1,27 @@
 {
-  "gitSource": {
-    "type": "github",
-    "org": "Aruniisu",
-    "repo": "Tomo-coffee"
-  },
   "version": 2,
   "builds": [
     {
       "src": "backend/app.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/app.py"
+      "dest": "backend/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
     }
-  ]
+  ],
+  "gitSource": {
+    "type": "github",
+    "repo": "Aruniisu/Tomo-coffee",
+    "org": "Aruniisu"
+  }
 }

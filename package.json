@@ -6,7 +6,8 @@
   "scripts": {
     "start": "python backend/app.py",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext .js,.jsx"
+    "lint": "eslint . --ext .js,.jsx",
+    "build": "cd frontend && npm install && npm run build"
   },
   "author": "",
   "license": "MIT",

@@ -13,15 +13,11 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/app.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
     }
   ],
   "gitSource": {
     "type": "github",
-    "repo": "Aruniisu/Tomo-coffee",
-    "org": "Aruniisu"
+    "org": "Aruniisu",
+    "repo": "Tomo-coffee"
   }
 }

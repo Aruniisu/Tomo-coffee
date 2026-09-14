@@ -11,10 +11,5 @@
       "src": "/api/(.*)",
       "dest": "backend/app.py"
     }
-  ],
-  "gitSource": {
-    "type": "github",
-    "repo": "Aruniisu/Tomo-coffee",
-    "org": "Aruniisu"
-  }
+  ]
 }

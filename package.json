@@ -1,0 +1,24 @@
+{
+  "name": "tomo-coffee",
+  "version": "1.0.0",
+  "description": "Backend for Tomo Coffee application",
+  "main": "backend/app.py",
+  "scripts": {
+    "start": "python backend/app.py",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "flask": "^3.0.0",
+    "flask-cors": "^4.0.0",
+    "flask-jwt-extended": "^4.6.0",
+    "pymysql": "^1.1.0",
+    "python-dotenv": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}

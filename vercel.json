@@ -1,15 +1,20 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/app.py"
+    }
+  ],
   "gitSource": {
     "type": "github",
     "repo": "Aruniisu/Tomo-coffee",
     "org": "Aruniisu"
-  },
-  "functions": {
-    "backend/**/*.py": {
-      "runtime": "python3.11"
-    }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/app.py" }
-  ]
+  }
 }

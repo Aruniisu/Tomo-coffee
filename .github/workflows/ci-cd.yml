@@ -1,61 +1,61 @@
-name: CI
-true:
+name: CI/CD
+
+on:
   push:
-    branches:
-    - main
+    branches: [main]
   pull_request:
-    branches:
-    - main
+    branches: [main]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     continue-on-error: true
-    strategy:
-      fail-fast: false
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-    - name: Install dependencies
-      working-directory: frontend
-      run: npm ci || npm install
-    - name: Run Lint
-      working-directory: frontend
-      run: npm run lint || true
-      continue-on-error: true
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: ./frontend
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
-    strategy:
-      fail-fast: false
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-    - name: Install dependencies
-      working-directory: frontend
-      run: npm ci || npm install
-    - name: Run Tests
-      working-directory: frontend
-      run: npm test || true
-      continue-on-error: true
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+      - name: Run tests
+        run: npm test -- --watchAll=false
+        working-directory: ./frontend
+
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
+    needs: [lint, test]
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-    - name: Install dependencies
-      working-directory: frontend
-      run: npm ci || npm install
-    - name: Build
-      working-directory: frontend
-      run: npm run build
+      - uses: actions/checkout@v3
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+      - name: Package artifact (placeholder)
+        run: echo "Packaging build artifacts..."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy application (placeholder)
+        run: echo "Deploying application..."

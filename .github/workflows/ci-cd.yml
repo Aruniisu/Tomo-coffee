@@ -1,58 +1,58 @@
-name: CI/CD
-
-on:
+name: CI
+true:
   push:
-    branches: [ main ]
+    branches:
+    - main
   pull_request:
-    branches: [ main ]
-
+    branches:
+    - main
 jobs:
   lint:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install || true
-      - name: Run ESLint
-        run: npm run lint || true
-
+    - uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm ci
+    - name: Lint
+      working-directory: frontend
+      run: npm run lint || true
+      continue-on-error: true
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install || true
-      - name: Run tests
-        run: npm test || true
-
+    - uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm ci
+    - name: Test
+      working-directory: frontend
+      run: npm test || true
+      continue-on-error: true
   build:
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs:
+    - lint
+    - test
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Install frontend dependencies and build
-        run: |
-          cd frontend
-          npm install
-          npm run build
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy step placeholder
-        run: echo "Deploy logic goes here"
+    - uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm ci
+    - name: Build
+      working-directory: frontend
+      run: npm run build

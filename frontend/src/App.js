@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import Login from './components/Login';
@@ -30,4 +29,4 @@ function App() {
     );
 }
 
-export default App;
+export default App

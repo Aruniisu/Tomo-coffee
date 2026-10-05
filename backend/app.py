@@ -209,9 +209,7 @@ def get_daily_profit():
         return jsonify({'error': str(e)}), 500
     finally:
         conn.close()
-        print("Hello World"  # <--- බලන්න, අන්තිමට ) නැහැ
+        print("Hello World")  # <--- බලන්න, අන්තිමට ) නැහැ
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
-

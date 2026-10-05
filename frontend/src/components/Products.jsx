@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 
 // Placeholder image URL used because the original '../assets/products/cappuccino.jpg' file is missing.

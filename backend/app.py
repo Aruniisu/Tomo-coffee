@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 import pymysql
 import bcrypt
 import os
@@ -12,16 +12,14 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# FIX: JWT Configuration - Add these 2 lines
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'tomo-coffee-secret-key-2026')  # Fallback key
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'tomo-coffee-secret-key-2026')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=8)
-app.config['JWT_TOKEN_LOCATION'] = ['headers']  # Explicitly tell where to find token
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
 app.config['JWT_HEADER_NAME'] = 'Authorization'
 app.config['JWT_HEADER_TYPE'] = 'Bearer'
 
 jwt = JWTManager(app)
 
-# Database connection
 def get_db_connection():
     return pymysql.connect(
         host=os.getenv('DB_HOST', 'localhost'),
@@ -31,7 +29,6 @@ def get_db_connection():
         cursorclass=pymysql.cursors.DictCursor
     )
 
-# Authentication endpoint - FIXED
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -48,11 +45,9 @@ def login():
             
         if user:
             print(f"User found: {user['username']}")
-            # FIX: Handle bcrypt properly
             if bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-                # FIX: Create proper token
                 access_token = create_access_token(
-                    identity=user['username'],  # Use username as identity
+                    identity=user['username'],
                     additional_claims={'username': user['username']}
                 )
                 print(f"Token created for {user['username']}")
@@ -68,7 +63,6 @@ def login():
     finally:
         conn.close()
 
-# Get all products - FIXED JWT
 @app.route('/api/products', methods=['GET'])
 @jwt_required()
 def get_products():
@@ -88,7 +82,6 @@ def get_products():
     finally:
         conn.close()
 
-# Create new order - FIXED
 @app.route('/api/orders', methods=['POST'])
 @jwt_required()
 def create_order():
@@ -102,16 +95,13 @@ def create_order():
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
-            # Create order
             cursor.execute(
               "INSERT INTO orders (total_amount) VALUES (%s)",
               (total_amount,)
             )
-
             order_id = cursor.lastrowid
             print(f"Order created with ID: {order_id}")
             
-            # Add order items
             for item in items:
                 cursor.execute(
                     "SELECT price, cost_price, stock_quantity FROM products WHERE id = %s",
@@ -132,7 +122,6 @@ def create_order():
                         product['cost_price']
                     ))
                     
-                    # Update stock
                     new_stock = product['stock_quantity'] - item['quantity']
                     cursor.execute(
                         "UPDATE products SET stock_quantity = %s WHERE id = %s",
@@ -152,7 +141,6 @@ def create_order():
     finally:
         conn.close()
 
-# Reports endpoints (keep same but with prints)
 @app.route('/api/reports/daily_sales', methods=['GET'])
 @jwt_required()
 def get_daily_sales():

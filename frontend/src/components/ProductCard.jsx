@@ -1,7 +1,7 @@
-import React from 'react';
-const cappuccino = 'https://via.placeholder.com/300x200?text=Cappuccino';
 import latte from '../assets/products/latte.jpg';
 import espresso from '../assets/products/espresso.jpg';
+
+const cappuccino = 'https://via.placeholder.com/300x200?text=Cappuccino';
 
 const products = [
   { name: 'Cappuccino', image: cappuccino },

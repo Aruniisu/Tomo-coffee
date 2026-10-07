@@ -11,33 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
     - name: Install dependencies
+      working-directory: frontend
       run: npm ci
+    - name: Run Lint
       working-directory: frontend
-    - name: Lint
       run: npm run lint || true
-      working-directory: frontend
       continue-on-error: true
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
     - name: Install dependencies
+      working-directory: frontend
       run: npm ci
+    - name: Run Tests
       working-directory: frontend
-    - name: Test
       run: npm test || true
-      working-directory: frontend
       continue-on-error: true
   build:
     runs-on: ubuntu-latest
@@ -45,14 +47,15 @@ jobs:
     - lint
     - test
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
     - name: Install dependencies
+      working-directory: frontend
       run: npm ci
+    - name: Build Application
       working-directory: frontend
-    - name: Build
       run: npm run build
-      working-directory: frontend

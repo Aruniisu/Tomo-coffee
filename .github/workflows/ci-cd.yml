@@ -10,6 +10,9 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     continue-on-error: true
+    defaults:
+      run:
+        working-directory: frontend
     steps:
     - uses: actions/checkout@v3
     - name: Setup Node
@@ -17,15 +20,16 @@ jobs:
       with:
         node-version: '20'
     - name: Install dependencies
-      working-directory: frontend
       run: npm ci
     - name: Lint
-      working-directory: frontend
       run: npm run lint || true
       continue-on-error: true
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
+    defaults:
+      run:
+        working-directory: frontend
     steps:
     - uses: actions/checkout@v3
     - name: Setup Node
@@ -33,10 +37,8 @@ jobs:
       with:
         node-version: '20'
     - name: Install dependencies
-      working-directory: frontend
       run: npm ci
     - name: Test
-      working-directory: frontend
       run: npm test || true
       continue-on-error: true
   build:
@@ -44,6 +46,9 @@ jobs:
     needs:
     - lint
     - test
+    defaults:
+      run:
+        working-directory: frontend
     steps:
     - uses: actions/checkout@v3
     - name: Setup Node
@@ -51,8 +56,6 @@ jobs:
       with:
         node-version: '20'
     - name: Install dependencies
-      working-directory: frontend
       run: npm ci
     - name: Build
-      working-directory: frontend
       run: npm run build
